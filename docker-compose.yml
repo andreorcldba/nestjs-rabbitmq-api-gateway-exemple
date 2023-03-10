@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  gateway:
+    container_name: gateway
+    hostname: gateway
+    build:
+      context: .
+      dockerfile: devops/Dockerfile
+    volumes:
+      - "./:/usr/src/app"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - RABBITMQ_USER=admin
+      - RABBITMQ_PASSWORD=admin
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE_NAME=user-authentication
+    command: npm run start:dev
+    ports:
+      - "3001:3001"
+    networks:
+      - default_network
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3-management
+    volumes:
+      - /var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - default_network
+networks:
+  default_network:
+    name: default_network
+    driver: bridge
+    external: true
