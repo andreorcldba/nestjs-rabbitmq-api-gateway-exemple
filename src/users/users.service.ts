@@ -16,11 +16,11 @@ export class UsersService {
   }
 
   async findAll(): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('findAllUsers', null));
+    return await firstValueFrom(this.userMicroService.send('findAllUsers', {}));
   }
 
   async findOne(id: number): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('findOneUsers', { id }));
+    return await firstValueFrom(this.userMicroService.send('findOneUser', id));
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Observable<any>> {
