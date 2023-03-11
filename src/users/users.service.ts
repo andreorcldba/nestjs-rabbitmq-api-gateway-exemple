@@ -24,7 +24,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('updateUsers', updateUserDto));
+    return await firstValueFrom(this.userMicroService.send('updateUser', { ...updateUserDto, id }));
   }
 
   async remove(id: number): Promise<Observable<any>> {
