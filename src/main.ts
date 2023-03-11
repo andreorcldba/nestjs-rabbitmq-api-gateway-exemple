@@ -9,6 +9,6 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  console.log(`Running on port: ${port}`);
+  console.log(`Api gateway running on port ${port}`);
 }
 bootstrap();

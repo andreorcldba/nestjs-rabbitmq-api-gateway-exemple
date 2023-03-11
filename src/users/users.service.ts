@@ -12,7 +12,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('createUsers', createUserDto));
+    return await firstValueFrom(this.userMicroService.send('createUser', createUserDto));
   }
 
   async findAll(): Promise<Observable<any>> {
