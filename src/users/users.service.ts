@@ -27,7 +27,7 @@ export class UsersService {
     return await firstValueFrom(this.userMicroService.send('updateUser', { ...updateUserDto, id }));
   }
 
-  async remove(id: number): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('deleteUsers', { id }));
+  remove(id: number): void {
+    firstValueFrom(this.userMicroService.send('removeUser', id));
   }
 }
