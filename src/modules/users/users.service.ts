@@ -1,5 +1,5 @@
 import { ClientProxy } from '@nestjs/microservices';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -11,23 +11,23 @@ export class UsersService {
     private readonly userMicroService: ClientProxy
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('createUser', createUserDto));
+  async create(createUserDto: CreateUserDto) {
+    return await firstValueFrom(this.userMicroService.send('create', createUserDto));
   }
 
   async findAll(): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('findAllUsers', {}));
+    return await firstValueFrom(this.userMicroService.send('findAll', {}));
   }
 
   async findOne(id: number): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('findOneUser', id));
+    return await firstValueFrom(this.userMicroService.send('findOne', id));
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Observable<any>> {
-    return await firstValueFrom(this.userMicroService.send('updateUser', { ...updateUserDto, id }));
+    return await firstValueFrom(this.userMicroService.send('update', { ...updateUserDto, id }));
   }
 
   remove(id: number): void {
-    firstValueFrom(this.userMicroService.send('removeUser', id));
+    firstValueFrom(this.userMicroService.send('remove', id));
   }
 }
