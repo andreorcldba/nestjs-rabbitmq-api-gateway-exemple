@@ -2,10 +2,23 @@ import { Module } from '@nestjs/common';
 import { AuthenticationsService } from './authentications.service';
 import { AuthenticationsController } from './authentications.controller';
 import { LocalStrategy } from './strategies/local.strategy';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: 'p:C%^sm8/M[@fm=2',
+        signOptions: {
+          expiresIn: `2h`
+        }
+      })
+    })
+  ],
   controllers: [AuthenticationsController],
   providers: [
     AuthenticationsService,

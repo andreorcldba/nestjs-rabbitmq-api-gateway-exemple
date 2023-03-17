@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, Req } from '@nestjs/common';
+import { RequestWithUser } from 'src/global-interfaces/request-user.interface';
 import { AuthenticationsService } from './authentications.service';
 import { LoginAuthenticationGuard } from './guards/login-authentication.guard';
 
@@ -9,23 +10,23 @@ export class AuthenticationsController {
   @HttpCode(200)
   @UseGuards(LoginAuthenticationGuard)
   @Post('log-in')
-  async login(
-    //@Req() request: RequestWithUser,
-    // @Res({passthrough:true}) res: Response 
-    ) {
-      return 'vai autenticar';
-    // var {user} = request;
-    // var token = this.authService.getCookieWithJwtToken(user.email)["access_token"];
-    // this.authService.setCookieWithJwtToken(user.id, token);
+  async login(@Req() request: RequestWithUser) {
+    const { user } = request;
+    const { access_token } = this.authenticationsService.getJwtToken(user);
 
-    // user.password = undefined;
-    // user.remember_token = undefined;
-    // user = {...user, ...{token:token}};
-      
-    // res.cookie('Set-Cookie', token);
-  
-    // return user;
+    await this.authenticationsService.setJwtToken(user.id, access_token);
+    const { refreshToken } = await this.authenticationsService.getJwtRefreshToken(
+      { email: user.email, id: user.id },
+      access_token
+    );
+
+    user.password = undefined;
+    user.remember_token = undefined;
+
+    return {
+      user,
+      access_token,
+      refreshToken
+    };
   }
-
-
 }
