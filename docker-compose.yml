@@ -16,6 +16,10 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - RABBITMQ_QUEUE_NAME=user-authentication
+      - JWT_SECRET_ACCESS_TOKEN=p:C%^sm8/M[@fm=2
+      - JWT_EXPIRATION_TIME_ACCESS_TOKEN=2h
+      - JWT_SECRET_REFRESH_TOKEN=123
+      - JWT_EXPIRATION_TIME_REFRESH_TOKEN=2h
     command: npm run start:dev
     ports:
       - "3001:3001"

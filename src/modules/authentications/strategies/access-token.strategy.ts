@@ -4,7 +4,7 @@ import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@n
 import { AuthenticationsService } from '../authentications.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class AccessTokenStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthenticationsService) {
     super({ usernameField: 'email', secretOrKey: '123' });
   }

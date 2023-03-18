@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthenticationsService } from './authentications.service';
 import { AuthenticationsController } from './authentications.controller';
-import { LocalStrategy } from './strategies/local.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { JwtRefreshTokenStrategy } from './strategies/jwt-refresh-token.strategy';
 
 @Module({
   imports: [
@@ -12,9 +14,9 @@ import { JwtModule } from '@nestjs/jwt';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: 'p:C%^sm8/M[@fm=2',
+        secret: configService.get('JWT_SECRET_ACCESS_TOKEN'),
         signOptions: {
-          expiresIn: `2h`
+          expiresIn: configService.get('JWT_EXPIRATION_TIME_ACCESS_TOKEN')
         }
       })
     })
@@ -22,7 +24,9 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AuthenticationsController],
   providers: [
     AuthenticationsService,
-    LocalStrategy,
+    AccessTokenStrategy,
+    JwtStrategy,
+    JwtRefreshTokenStrategy,
     ConfigService,
     {
       provide: 'userMicroService',

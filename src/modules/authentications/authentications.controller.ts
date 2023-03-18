@@ -1,32 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, HttpCode, UseGuards, Req } from '@nestjs/common';
 import { RequestWithUser } from 'src/global-interfaces/request-user.interface';
 import { AuthenticationsService } from './authentications.service';
-import { LoginAuthenticationGuard } from './guards/login-authentication.guard';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import JwtRefreshGuard from './guards/jwt-refresh.guard';
 
 @Controller()
 export class AuthenticationsController {
   constructor(private readonly authenticationsService: AuthenticationsService) {}
 
   @HttpCode(200)
-  @UseGuards(LoginAuthenticationGuard)
+  @UseGuards(AccessTokenGuard)
   @Post('log-in')
   async login(@Req() request: RequestWithUser) {
-    const { user } = request;
-    const { access_token } = this.authenticationsService.getJwtToken(user);
+    return this.authenticationsService.getTokenAndRefreshToken(request.user);
+  }
 
-    await this.authenticationsService.setJwtToken(user.id, access_token);
-    const { refreshToken } = await this.authenticationsService.getJwtRefreshToken(
-      { email: user.email, id: user.id },
-      access_token
-    );
-
-    user.password = undefined;
-    user.remember_token = undefined;
-
-    return {
-      user,
-      access_token,
-      refreshToken
-    };
+  @Get('refresh-token')
+  @UseGuards(JwtRefreshGuard)
+  async refreshToken(@Req() request: RequestWithUser) {
+    return this.authenticationsService.getTokenAndRefreshToken(request.user);
   }
 }
