@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { JwtRefreshTokenStrategy } from './strategies/jwt-refresh-token.strategy';
+import { HelperService } from '../helper/helper.service';
 
 @Module({
   imports: [

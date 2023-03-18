@@ -7,7 +7,5 @@ export class Users extends DefaultBaseEntity {
 
   public password: string;
 
-  public remember_token: string;
-
   public status: boolean;
 }
