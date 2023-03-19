@@ -16,6 +16,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - RABBITMQ_QUEUE_NAME=user-authentication
+      - RABBITMQ_QUEUE_NAME_DLQ=user-authentication-dlq
       - JWT_SECRET_ACCESS_TOKEN=p:C%^sm8/M[@fm=2
       - JWT_EXPIRATION_TIME_ACCESS_TOKEN=2h
       - JWT_SECRET_REFRESH_TOKEN=123

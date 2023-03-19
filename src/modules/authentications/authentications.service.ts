@@ -5,7 +5,6 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, Observable } from 'rxjs';
 import { eventList } from 'src/constants';
 import { RequestWithUser } from 'src/global-interfaces/request-user.interface';
-import { HelperService } from '../helper/helper.service';
 import { TokenDto } from './dto/token.dto';
 
 @Injectable()
