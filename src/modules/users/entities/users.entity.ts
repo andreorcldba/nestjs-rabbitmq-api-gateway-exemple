@@ -1,4 +1,4 @@
-import { DefaultBaseEntity } from 'src/modules/base/entities/base.entity';
+import { DefaultBaseEntity } from 'src/typeorm-base/entities/base.entity';
 
 export class Users extends DefaultBaseEntity {
   public name: string;

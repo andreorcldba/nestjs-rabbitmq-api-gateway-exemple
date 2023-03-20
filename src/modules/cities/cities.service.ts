@@ -1,22 +1,26 @@
-import { ClientProxy } from '@nestjs/microservices';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { firstValueFrom, Observable } from 'rxjs';
-import { MicroservicesList } from 'src/enums/global.enum';
-import { eventList } from 'src/constants/microservices';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 import { responseHttpErrorMessage } from 'src/constants/http-responses';
-import { Users } from './entities/users.entity';
+import { eventList } from 'src/constants/microservices';
+import { MicroservicesList } from 'src/enums/global.enum';
+import { IUpdateMicroserviceResponse } from 'src/interfaces/microservices.interface';
+import { Users } from '../users/entities/users.entity';
+import { CreateCityDto } from './dto/create-city.dto';
+import { UpdateCityDto } from './dto/update-city.dto';
+
 @Injectable()
-export class UsersService {
+export class CitiesService {
   constructor(
     @Inject(MicroservicesList.userMicroService)
     private readonly userMicroService: ClientProxy
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Users> {
+  async create(createCityDto: CreateCityDto) {
+    const message = eventList.userMicroservice.createCity;
+
     try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.create, createUserDto));
+      return await firstValueFrom(this.userMicroService.send(message, createCityDto));
     } catch (error) {
       throw new HttpException(
         responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
@@ -27,7 +31,7 @@ export class UsersService {
 
   async findAll(): Promise<Users[]> {
     try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findAll, {}));
+      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findAllCities, {}));
     } catch (error) {
       throw new HttpException(
         responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
@@ -38,7 +42,7 @@ export class UsersService {
 
   async findOne(id: number): Promise<Users> {
     try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findOne, id));
+      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findOneCity, id));
     } catch (error) {
       throw new HttpException(
         responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
@@ -47,9 +51,11 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+  async update(id: number, updateCityDto: UpdateCityDto): Promise<IUpdateMicroserviceResponse> {
     try {
-      await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.update, { ...updateUserDto, id }));
+      return await firstValueFrom(
+        this.userMicroService.send(eventList.userMicroservice.updateCity, { ...updateCityDto, id })
+      );
     } catch (error) {
       throw new HttpException(
         responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
@@ -58,9 +64,9 @@ export class UsersService {
     }
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<Users> {
     try {
-      await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.remove, id));
+      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.removeCity, id));
     } catch (error) {
       throw new HttpException(
         responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],

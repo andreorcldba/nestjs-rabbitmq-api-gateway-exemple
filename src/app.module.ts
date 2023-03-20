@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { AuthenticationsModule } from './modules/authentications/authentications.module';
 import { HelperModule } from './modules/helper/helper.module';
-import { ProfileModule } from './modules/profile/profile.module';
+import { CitiesModule } from './modules/cities/cities.module';
+import { FederalUnitsModule } from './modules/federal-units/federal-units.module';
 
 @Module({
-  imports: [UsersModule, AuthenticationsModule, HelperModule, ProfileModule],
+  imports: [UsersModule, AuthenticationsModule, HelperModule, FederalUnitsModule, CitiesModule],
   controllers: [AppController],
   providers: [AppService]
 })

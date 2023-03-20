@@ -1,23 +1,23 @@
 import { Controller, Get, Post, HttpCode, UseGuards, Req } from '@nestjs/common';
-import { RequestWithUser } from 'src/global-interfaces/request-user.interface';
+import { AuthGuard } from '@nestjs/passport';
+import { IRequestUser } from 'src/interfaces/request-user.interface';
+import { IAccessAndRefreshToken } from 'src/interfaces/tokens.interface';
 import { AuthenticationsService } from './authentications.service';
-import { AccessTokenGuard } from './guards/access-token.guard';
-import JwtRefreshGuard from './guards/jwt-refresh.guard';
 
 @Controller()
 export class AuthenticationsController {
   constructor(private readonly authenticationsService: AuthenticationsService) {}
 
   @HttpCode(200)
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AuthGuard('local'))
   @Post('log-in')
-  async login(@Req() request: RequestWithUser) {
+  async login(@Req() request: IRequestUser): Promise<IAccessAndRefreshToken> {
     return this.authenticationsService.getTokenAndRefreshToken(request.user);
   }
 
   @Get('refresh-token')
-  @UseGuards(JwtRefreshGuard)
-  async refreshToken(@Req() request: RequestWithUser) {
+  @UseGuards(AuthGuard('jwt-refresh-token'))
+  async refreshToken(@Req() request: IRequestUser): Promise<IAccessAndRefreshToken> {
     return this.authenticationsService.getTokenAndRefreshToken(request.user);
   }
 }

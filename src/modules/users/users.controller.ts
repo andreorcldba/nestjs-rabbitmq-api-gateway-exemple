@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { JwtAuthGuard } from '../authentications/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Users } from './entities/users.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -10,33 +11,33 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<Users> {
+    return await this.usersService.create(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<void> {
+    return await this.usersService.update(+id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll(): Promise<Users[]> {
+    return await this.usersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Users> {
+    return await this.usersService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(+id);
   }
 }
