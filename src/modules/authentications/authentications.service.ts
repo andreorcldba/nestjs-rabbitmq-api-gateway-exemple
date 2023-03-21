@@ -50,7 +50,7 @@ export class AuthenticationsService {
 
   async getUserIfRefreshTokenMatches(email: TokenDto['email']): Promise<Users> {
     try {
-      return firstValueFrom(this.userMicroService.send<Users>(eventList.userMicroservice.findOneByEmail, email));
+      return firstValueFrom(this.userMicroService.send<Users>(eventList.userMicroservice.findOneByEmailUser, email));
     } catch (error) {
       throw new HttpException(responseHttpErrorMessage[HttpStatus.NOT_FOUND], HttpStatus.NOT_FOUND);
     }

@@ -6,10 +6,12 @@ import { AuthenticationsModule } from './modules/authentications/authentications
 import { HelperModule } from './modules/helper/helper.module';
 import { CitiesModule } from './modules/cities/cities.module';
 import { FederalUnitsModule } from './modules/federal-units/federal-units.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [UsersModule, AuthenticationsModule, HelperModule, FederalUnitsModule, CitiesModule],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, JwtStrategy, ConfigService]
 })
 export class AppModule {}

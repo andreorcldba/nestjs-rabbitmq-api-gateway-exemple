@@ -5,10 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy } from '../../strategies/access-token.strategy';
 import { JwtRefreshTokenStrategy } from '../../strategies/jwt-refresh-token.strategy';
-import { HelperService } from '../helper/helper.service';
 import { MicroservicesList } from 'src/enums/global.enum';
+import { OutputTransportsService } from 'src/output-transports/output-transports.transports';
 
-const helperService = new HelperService(new ConfigService());
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -28,7 +27,7 @@ const helperService = new HelperService(new ConfigService());
     AccessTokenStrategy,
     JwtRefreshTokenStrategy,
     ConfigService,
-    helperService.rabbitMqConfig(MicroservicesList.userMicroService)
+    OutputTransportsService.rabbitMqClient(MicroservicesList.userMicroService)
   ]
 })
 export class AuthenticationsModule {}

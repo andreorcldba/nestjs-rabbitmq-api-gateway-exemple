@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { firstValueFrom, timeout } from 'rxjs';
+import { responseHttpErrorMessage } from 'src/constants/http-responses';
 import { MicroservicesList, MicroserviceTokenList } from 'src/enums/global.enum';
-import { IEventSend } from 'src/interfaces/microservices.interface';
+import { IEventList, IEventSend } from 'src/interfaces/microservices.interface';
 
 @Injectable()
 export class HelperService {
@@ -15,27 +17,15 @@ export class HelperService {
     };
   }
 
-  rabbitMqConfig(queue: MicroservicesList) {
-    return {
-      provide: queue,
-      useFactory: (configService: ConfigService) => {
-        const user = configService.get('RABBITMQ_USER');
-        const password = configService.get('RABBITMQ_PASSWORD');
-        const host = configService.get('RABBITMQ_HOST');
-        const port = configService.get('RABBITMQ_PORT');
-        const queueName = configService.get('RABBITMQ_QUEUE_NAME');
-        return ClientProxyFactory.create({
-          transport: Transport.RMQ,
-          options: {
-            urls: [`amqp://${user}:${password}@${host}:${port}`],
-            queue: queueName,
-            queueOptions: {
-              durable: true
-            }
-          }
-        });
-      },
-      inject: [ConfigService]
-    };
+  async sendEvent(eventProps: IEventSend, data: any, clientProxy: ClientProxy): Promise<any> {
+    return await firstValueFrom(
+      clientProxy.send(eventProps, data).pipe(
+        timeout(2000) // <-- HTTP request will error out if no response for 5 seconds
+      )
+    ).catch((e) => {
+      if (e?.statusCode) throw e;
+
+      throw new HttpException(responseHttpErrorMessage[HttpStatus.REQUEST_TIMEOUT], HttpStatus.REQUEST_TIMEOUT);
+    });
   }
 }

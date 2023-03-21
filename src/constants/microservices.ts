@@ -10,12 +10,12 @@ export const eventList: IEventList = {
   userMicroservice: {
     //Users
     logIn: helperService.prepareEvent('logIn', MicroservicesList.userMicroService),
-    create: helperService.prepareEvent('create', MicroservicesList.userMicroService),
-    findAll: helperService.prepareEvent('findAll', MicroservicesList.userMicroService),
-    findOne: helperService.prepareEvent('findOne', MicroservicesList.userMicroService),
-    findOneByEmail: helperService.prepareEvent('findOneByEmail', MicroservicesList.userMicroService),
-    update: helperService.prepareEvent('update', MicroservicesList.userMicroService),
-    remove: helperService.prepareEvent('remove', MicroservicesList.userMicroService),
+    createUser: helperService.prepareEvent('createUser', MicroservicesList.userMicroService),
+    findAllUsers: helperService.prepareEvent('findAllUsers', MicroservicesList.userMicroService),
+    findOneUser: helperService.prepareEvent('findOneUser', MicroservicesList.userMicroService),
+    findOneByEmailUser: helperService.prepareEvent('findOneByEmailUser', MicroservicesList.userMicroService),
+    updateUser: helperService.prepareEvent('updateUser', MicroservicesList.userMicroService),
+    removeUser: helperService.prepareEvent('removeUser', MicroservicesList.userMicroService),
     //federal-units
     createFederalUnit: helperService.prepareEvent('createFederalUnit', MicroservicesList.userMicroService),
     findAllFederalUnits: helperService.prepareEvent('findAllFederalUnits', MicroservicesList.userMicroService),

@@ -3,12 +3,12 @@
 export interface IEventList {
   userMicroservice: {
     logIn: IEventSend;
-    update: IEventSend;
-    findOne: IEventSend;
-    findOneByEmail: IEventSend;
-    findAll: IEventSend;
-    create: IEventSend;
-    remove: IEventSend;
+    updateUser: IEventSend;
+    findOneUser: IEventSend;
+    findOneByEmailUser: IEventSend;
+    findAllUsers: IEventSend;
+    createUser: IEventSend;
+    removeUser: IEventSend;
     findAllFederalUnits: IEventSend;
     findOneFederalUnit: IEventSend;
     createFederalUnit: IEventSend;

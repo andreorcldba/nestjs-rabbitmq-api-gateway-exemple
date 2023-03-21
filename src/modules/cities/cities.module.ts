@@ -3,12 +3,11 @@ import { CitiesService } from './cities.service';
 import { CitiesController } from './cities.controller';
 import { ConfigService } from '@nestjs/config';
 import { MicroservicesList } from 'src/enums/global.enum';
-import { HelperService } from '../helper/helper.service';
+import { OutputTransportsService } from 'src/output-transports/output-transports.transports';
 
-const helperService = new HelperService(new ConfigService());
 
 @Module({
   controllers: [CitiesController],
-  providers: [CitiesService, ConfigService, helperService.rabbitMqConfig(MicroservicesList.userMicroService)]
+  providers: [CitiesService, ConfigService, OutputTransportsService.rabbitMqClient(MicroservicesList.userMicroService)]
 })
 export class CitiesModule {}

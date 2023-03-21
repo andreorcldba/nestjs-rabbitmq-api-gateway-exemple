@@ -9,7 +9,7 @@ export const responseHttpErrorMessage: IResponseMessage = {
   },
   [HttpStatus.NOT_FOUND]: {
     statusCode: HttpStatus.NOT_FOUND,
-    message: 'Resource not found',
+    message: ['Resource not found'],
     error: 'Not found'
   },
   [HttpStatus.UNAUTHORIZED]: {
@@ -26,5 +26,10 @@ export const responseHttpErrorMessage: IResponseMessage = {
     statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
     message: ['Unexpected error'],
     error: 'Internal server error'
+  },
+  [HttpStatus.REQUEST_TIMEOUT]: {
+    statusCode: HttpStatus.REQUEST_TIMEOUT,
+    message: ['Request timeout'],
+    error: 'Request timeout'
   }
 };

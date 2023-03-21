@@ -2,70 +2,47 @@ import { ClientProxy } from '@nestjs/microservices';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable, timeout } from 'rxjs';
 import { MicroservicesList } from 'src/enums/global.enum';
 import { eventList } from 'src/constants/microservices';
 import { responseHttpErrorMessage } from 'src/constants/http-responses';
 import { Users } from './entities/users.entity';
+import { HelperService } from '../helper/helper.service';
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly helperService: HelperService,
     @Inject(MicroservicesList.userMicroService)
     private readonly userMicroService: ClientProxy
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Users> {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.create, createUserDto));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  create(createUserDto: CreateUserDto): Promise<Users> {
+    const eventProps = eventList.userMicroservice.createUser;
+
+    return this.helperService.sendEvent(eventProps, createUserDto, this.userMicroService);
   }
 
-  async findAll(): Promise<Users[]> {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findAll, {}));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  findAll(): Promise<Users[]> {
+    const eventProps = eventList.userMicroservice.findAllUsers;
+
+    return this.helperService.sendEvent(eventProps, {}, this.userMicroService);
   }
 
-  async findOne(id: number): Promise<Users> {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findOne, id));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  findOne(id: number): Promise<Users> {
+    const eventProps = eventList.userMicroservice.findOneUser;
+
+    return this.helperService.sendEvent(eventProps, id, this.userMicroService);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
-    try {
-      await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.update, { ...updateUserDto, id }));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+    const eventProps = eventList.userMicroservice.updateUser;
+
+    return this.helperService.sendEvent(eventProps, { ...updateUserDto, id }, this.userMicroService);
   }
 
   async remove(id: number): Promise<void> {
-    try {
-      await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.remove, id));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+    const eventProps = eventList.userMicroservice.removeUser;
+
+    return this.helperService.sendEvent(eventProps, id, this.userMicroService);
   }
 }
