@@ -1,75 +1,47 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
-import { responseHttpErrorMessage } from 'src/constants/http-responses';
 import { eventList } from 'src/constants/microservices';
 import { MicroservicesList } from 'src/enums/global.enum';
+import { HelperService } from '../helper/helper.service';
 import { CreateFederalUnitDto } from './dto/create-federal-unit.dto';
 import { UpdateFederalUnitDto } from './dto/update-federal-unit.dto';
+import { FederalUnit } from './entities/federal-unit.entity';
 
 @Injectable()
 export class FederalUnitsService {
   constructor(
+    private readonly helperService: HelperService,
     @Inject(MicroservicesList.userMicroService)
     private readonly userMicroService: ClientProxy
   ) {}
 
-  async create(createFederalUnitDto: CreateFederalUnitDto) {
-    try {
-      return await firstValueFrom(
-        this.userMicroService.send(eventList.userMicroservice.createFederalUnit, createFederalUnitDto)
-      );
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  create(createFederalUnitDto: CreateFederalUnitDto): Promise<FederalUnit> {
+    const eventProps = eventList.userMicroservice.createFederalUnit;
+
+    return this.helperService.sendEvent(eventProps, createFederalUnitDto, this.userMicroService);
   }
 
-  async findAll() {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findAllFederalUnits, {}));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  findAll(): Promise<FederalUnit[]> {
+    const eventProps = eventList.userMicroservice.findAllFederalUnits;
+
+    return this.helperService.sendEvent(eventProps, {}, this.userMicroService);
   }
 
-  async findOne(id: number) {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.findOneFederalUnit, id));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  findOne(id: number): Promise<FederalUnit> {
+    const eventProps = eventList.userMicroservice.findOneFederalUnit;
+
+    return this.helperService.sendEvent(eventProps, id, this.userMicroService);
   }
 
-  async update(id: number, updateFederalUnitDto: UpdateFederalUnitDto) {
-    try {
-      return await firstValueFrom(
-        this.userMicroService.send(eventList.userMicroservice.updateFederalUnit, { ...updateFederalUnitDto, id })
-      );
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  update(id: number, updateFederalUnitDto: UpdateFederalUnitDto): Promise<void> {
+    const eventProps = eventList.userMicroservice.updateFederalUnit;
+
+    return this.helperService.sendEvent(eventProps, { ...updateFederalUnitDto, id }, this.userMicroService);
   }
 
-  async remove(id: number) {
-    try {
-      return await firstValueFrom(this.userMicroService.send(eventList.userMicroservice.removeFederalUnit, id));
-    } catch (error) {
-      throw new HttpException(
-        responseHttpErrorMessage[HttpStatus.INTERNAL_SERVER_ERROR],
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
+  async remove(id: number): Promise<void> {
+    const eventProps = eventList.userMicroservice.removeFederalUnit;
+
+    return this.helperService.sendEvent(eventProps, id, this.userMicroService);
   }
 }

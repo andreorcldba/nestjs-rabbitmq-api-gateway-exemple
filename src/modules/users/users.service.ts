@@ -1,11 +1,9 @@
 import { ClientProxy } from '@nestjs/microservices';
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { firstValueFrom, map, Observable, timeout } from 'rxjs';
 import { MicroservicesList } from 'src/enums/global.enum';
 import { eventList } from 'src/constants/microservices';
-import { responseHttpErrorMessage } from 'src/constants/http-responses';
 import { Users } from './entities/users.entity';
 import { HelperService } from '../helper/helper.service';
 @Injectable()
